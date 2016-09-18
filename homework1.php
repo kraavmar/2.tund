@@ -4,12 +4,13 @@
 	//echo "<br>";
 	//var_dump($_POST);
 	
-	$signupEmailError = "";
-	$signupPasswordError = "";
 	$loginEmailError = "";
 	$loginPasswordError = "";
 	$firstNameError = "";
 	$lastNameError = "";
+	$signupEmailError = "";
+	$signupPasswordError = "";
+	$phoneNumberError = "";
 	
 	if (isset ($_POST["loginEmail"]) ){
 		if (empty ($_POST["loginEmail"]) ){
@@ -26,12 +27,21 @@
 	if (isset ($_POST["firstName"]) ){
 		if (empty ($_POST["firstName"]) ){
 			$firstNameError = "See väli on kohustuslik!";		
+		} else {
+			//The preg_match() function searches a string for pattern, returning true if the pattern exists, and false otherwise.
+			if (!preg_match("/^[a-zA-Z õäöüšž-]*$/",$_POST["firstName"])) { 
+				$firstNameError = "Pole nimi!"; 
+			}
 		}
 	}
 	
 	if (isset ($_POST["lastName"]) ){
 		if (empty ($_POST["lastName"]) ){
 			$lastNameError = "See väli on kohustuslik!";		
+		} else {
+			if (!preg_match("/^[a-zA-Z õäöüšž-]*$/",$_POST["lastName"])) { 
+				$lastNameError = "Pole nimi!"; 
+			}
 		}
 	}
 	
@@ -50,6 +60,19 @@
 			//tean, et oli parool ja see ei olnud tühi
 			if (strlen($_POST["signupPassword"]) < 8){ //strlen- stringi pikkus
 				$signupPasswordError = "Parool peab olema vähemalt 8 tähemärki pikk!";
+			}
+		}
+	}
+	
+	
+	if (isset ($_POST["phoneNumber"]) ){
+		if (empty ($_POST["phoneNumber"]) ){ 
+			$phoneNumberError = "";
+		} else {
+			if (ctype_digit($_POST["phoneNumber"])){ //ctype_digit- checks if all of the characters in the Provided string, text, are numerical.
+				$phoneNumberError = "";		
+			} else {
+				$phoneNumberError = "Ainult numbrid on lubatud!";
 			}
 		}
 	}
@@ -77,7 +100,7 @@
 		<h1>Loo kasutaja</h1>	
 		
 		<form method="POST">
-			<label>Nimi</label>
+			<label>Eesnimi</label>
 			<br>
 			<input name="firstName" type="text"> <?php echo $firstNameError; ?>
 			<br><br>
@@ -97,18 +120,18 @@
 			<input name="signupPassword" type="password"> <?php echo $signupPasswordError; ?>
 			<br><br>
 			
-			<label>Sugu:</label>
+			<label>Sugu:</label> <!--Jätan vabatahtlikuks väljaks-->
 			<input type="radio" name="gender" value="female">Naine
 			<input type="radio" name="gender" value="male">Mees
 			<br><br>
 			
-			<label>Telefoni number</label>
+			<label>Telefoni number</label> <!--Jätan vabatahtlikuks väljaks-->
 			<br>
-			<input name="phoneNumber" type="text">
+			<input name="phoneNumber" type="text"> <?php echo $phoneNumberError; ?>
 			<br><br>
 			
 			<input type="submit" value = "Loo kasutaja">
 		</form>
-
+		 <!--Mvp ideeks on üldine foorum, kuhu saab postitada erinevaid teemasid ning kommenteerida olemasolevaid. Vastates teiste kasutajate teemadele saab koguda punkte ning neid kasutada oma teemadele "high priority" märkimisel või toodete/autasude lunastamisel. "High priority" eest saab oma teema tõsta teiste seast esile/ettepoole ning sellele motiveerib rohkem vastama, kuna võimalus on teenida rohkem punkte. Väga originaalset ideed hetkel ei ole, aga ehk tuleb teostamise käigus ning võib-olla idee ka muutub natukene.-->
 	</body>
 </html>
